@@ -1,15 +1,21 @@
-.PHONY: check-env build-solidity show-abi
+.PHONY: env.check solidity.clean solidity.build solidity.show.abi
 
 
 
-check-env:
+env.check:
 	@cd scripts; ./check-env.sh
 
 clean:
 	@rm -rf contracts/artifacts
 
-build-solidity:
+solidity.build:
 	@solc --bin --abi --overwrite -o contracts/artifacts contracts/*.sol
 
-show-abi:
+solidity.show.abi:
 	@cat contracts/artifacts/Journal.abi | jq '.'
+
+build.all: solidity.build go.build
+
+
+test.integration:
+  go test  integration-test/ -count=1

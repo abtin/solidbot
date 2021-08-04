@@ -1,6 +1,6 @@
 . ./common.sh
 
-EXECUTABLES="go solc docker terraform jq"
+EXECUTABLES="go solc docker terraform jq ganache-cli"
 
 echo "Checking scripts dependencies:"
 
