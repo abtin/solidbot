@@ -1,14 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract Journal {
-    string public entry;
-    uint public timestamp;
-    address public author;
+contract Inbox {
+    string public message;
 
-    function newEntry(string memory _entry) public {
-        entry = _entry;
-        timestamp = block.timestamp;
-        author = msg.sender;
+    function setMessage(string memory _message) public {
+        message = _message;
     }
 }

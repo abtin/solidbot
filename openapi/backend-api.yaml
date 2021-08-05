@@ -1,0 +1,18 @@
+openapi: 3.0.0
+info:
+  title: Backend API
+  version: 0.1.0
+servers:
+  - url: http://api.example.com/v1
+    description: Optional server description, e.g. Main (production) server
+paths:
+  /message:
+    get:
+      summary: Returns the last message from the chain.
+      responses:
+        '200': # status code
+          description: A string message
+          content:
+            application/json:
+              schema:
+                type: string

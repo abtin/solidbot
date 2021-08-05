@@ -1,21 +1,29 @@
 .PHONY: env.check solidity.clean solidity.build solidity.show.abi
 
-
+SHELL := /bin/bash # Use bash syntax
 
 env.check:
-	@cd scripts; ./check-env.sh
+	@cd ./scripts; ./check-env.sh
 
-clean:
-	@rm -rf contracts/artifacts
+solidity.clean:
+	@rm -rf ./contracts/artifacts
 
 solidity.build:
-	@solc --bin --abi --overwrite -o contracts/artifacts contracts/*.sol
+	@solc --bin --abi --overwrite -o ./contracts/artifacts contracts/*.sol
 
 solidity.show.abi:
-	@cat contracts/artifacts/Journal.abi | jq '.'
+	@cat ./contracts/artifacts/Journal.abi | jq '.'
 
-build.all: solidity.build go.build
+
+backend.api.gen:
+	docker run --rm -v "${PWD}:/local" openapitools/openapi-generator-cli generate \
+        -i ./openapi/backend-api.yaml\
+        -g go \
+        -o ./internal/backend/
 
 
 test.integration:
-  go test  integration-test/ -count=1
+	@docker-compose -f ./docker-compose-test.yaml up -d
+	@$(shell timeout 7 sh -c 'until nc -z localhost 8545; do sleep 1; done')
+	@go test -v ./integrationtest/integration_test.go -count=1
+	@docker-compose -f ./docker-compose-test.yaml down
