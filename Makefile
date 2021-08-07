@@ -9,7 +9,7 @@ solidity.clean:
 	@rm -rf ./contracts/artifacts
 
 solidity.build:
-	@solc --bin --abi --overwrite -o ./contracts/artifacts contracts/*.sol
+	@solc --bin --abi  --gas --overwrite -o ./contracts/artifacts contracts/*.sol
 
 solidity.show.abi:
 	@cat ./contracts/artifacts/Journal.abi | jq '.'
@@ -24,6 +24,6 @@ backend.api.gen:
 
 test.integration:
 	@docker-compose -f ./docker-compose-test.yaml up -d
-	@$(shell timeout 7 sh -c 'until nc -z localhost 8545; do sleep 1; done')
+	@sleep 4
 	@go test -v ./integrationtest/integration_test.go -count=1
 	@docker-compose -f ./docker-compose-test.yaml down
